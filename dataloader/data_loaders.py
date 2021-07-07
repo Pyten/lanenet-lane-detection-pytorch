@@ -27,6 +27,8 @@ class TusimpleSet(Dataset):
         self.n_labels = n_labels
 
         with open(dataset, 'r') as file:
+            # import pdb
+            # pdb.set_trace()
             for _info in file:
                 info_tmp = _info.strip(' ').split()
 
@@ -63,10 +65,13 @@ class TusimpleSet(Dataset):
         if self.target_transform:
             label_img = self.target_transform(label_img)
             label_instance_img = self.target_transform(label_instance_img)
-
+        # import pdb
+        # pdb.set_trace()
         label_binary = np.zeros([label_img.shape[0], label_img.shape[1]], dtype=np.uint8)
         mask = np.where((label_img[:, :, :] != [0, 0, 0]).all(axis=2))
-        label_binary[mask] = 1
+        label_binary[mask] = label_img[mask][:,0]
+        # label_binary[mask] = 1
+        # label_binary = label_img
 
         # we could split the instance label here, each instance in one channel (basically a binary mask for each)
         return img, label_binary, label_instance_img

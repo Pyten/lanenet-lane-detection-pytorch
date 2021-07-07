@@ -25,7 +25,7 @@ class LaneNet(nn.Module):
             self._encoder = UNet_Encoder(in_ch)
             self._encoder.to(DEVICE)
 
-            self._decoder_binary = UNet_Decoder(2)
+            self._decoder_binary = UNet_Decoder(13)
             self._decoder_instance = UNet_Decoder(self.no_of_instances)
             self._decoder_binary.to(DEVICE)
             self._decoder_instance.to(DEVICE)
@@ -33,7 +33,7 @@ class LaneNet(nn.Module):
             self._encoder = ENet_Encoder(in_ch)
             self._encoder.to(DEVICE)
 
-            self._decoder_binary = ENet_Decoder(2)
+            self._decoder_binary = ENet_Decoder(13)
             self._decoder_instance = ENet_Decoder(self.no_of_instances)
             self._decoder_binary.to(DEVICE)
             self._decoder_instance.to(DEVICE)
