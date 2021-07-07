@@ -7,6 +7,7 @@ import time
 import copy
 from model.lanenet.loss import DiscriminativeLoss
 from tqdm import tqdm
+import os
 
 def compute_loss(net_output, binary_label, instance_label):
     k_binary = 1.7
@@ -80,7 +81,7 @@ def train_model(model, optimizer, scheduler, dataloaders, dataset_sizes, device,
                 running_loss_b += loss[1].item() * inputs.size(0)
                 running_loss_i += loss[2].item() * inputs.size(0)
 
-                if i > 0 and i % 50 == 0:
+                if i > 0 and i % 500 == 0:
                     print('{} Total Loss: {:.4f} Binary Loss: {:.4f} Instance Loss: {:.4f}'
                             .format(phase, running_loss / (50.0 * int(i)),
                                     running_loss_b/ (50.0 * int(i)), running_loss_i / (50.0 * int(i))))
@@ -88,8 +89,6 @@ def train_model(model, optimizer, scheduler, dataloaders, dataset_sizes, device,
             if phase == 'train':
                 if scheduler != None:
                     scheduler.step()
-
-
 
             epoch_loss = running_loss / dataset_sizes[phase]
             binary_loss = running_loss_b / dataset_sizes[phase]
