@@ -25,4 +25,42 @@ class Eval_Score():
         return np.clip(((2. * self.intersection) / (self.sum + eps)), 1e-5, 0.99999)
     
     def IoU(self):
+        if self.union == 0: return 0.0
         return self.intersection / self.union
+
+class Multi_Eval_Score():
+
+    def __init__(self, y_pred, y_true, classNumber, threshold=0.5):
+        self.y_pred = y_pred
+        self.y_true = y_true
+        self.classNumber = classNumber
+        self.threshold = threshold
+
+    def get_cur_label(self, classIdx, neededMap):
+        map = np.zeros((self.y_pred.shape[0], self.y_pred.shape[1]))
+        # y_true = self.y_true.cpu().numpy()
+        map_idx = neededMap == classIdx
+        map[map_idx] = classIdx
+        return map
+
+    def get_cur_label_map(self, classIdx):
+        cur_label = self.get_cur_label(classIdx, self.y_true)
+        cur_pred = self.get_cur_label(classIdx, self.y_pred)
+
+        return cur_pred, cur_label
+
+    def IoU(self):
+        eval_list = [0.0 for i in range(self.classNumber - 1)]
+        count_label = [0 for i in range(self.classNumber - 1)]
+        # import pdb
+
+        for i in range(1, self.classNumber):
+            # pdb.set_trace()
+            cur_pred, cur_label = self.get_cur_label_map(i)
+            numbers = np.unique(cur_label)
+            for j in numbers[1:]:
+                count_label[int(j)] += 1
+            iou = Eval_Score(cur_pred, cur_label).IoU()
+            eval_list[i - 1] = iou
+
+        return eval_list, count_label

@@ -50,6 +50,7 @@ class LaneNet(nn.Module):
             c = self._encoder(input_tensor)
             binary = self._decoder_binary(c)
             instance = self._decoder_instance(c)
+        
 
         binary_seg_ret = torch.argmax(F.softmax(binary, dim=1), dim=1, keepdim=True)
 
