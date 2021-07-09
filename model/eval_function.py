@@ -59,7 +59,7 @@ class Multi_Eval_Score():
             cur_pred, cur_label = self.get_cur_label_map(i)
             numbers = np.unique(cur_label)
             for j in numbers[1:]:
-                count_label[int(j)] += 1
+                count_label[int(j - 1)] += 1
             iou = Eval_Score(cur_pred, cur_label).IoU()
             eval_list[i - 1] = iou
 
